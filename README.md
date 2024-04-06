@@ -1,9 +1,9 @@
 # AIFloorPlan REST API #
 
-Framework: Spring Boot
-Tipe Database: MySQL
-Nama Database: aifloorplan
-Port: 3306
+Framework: Spring Boot <br>
+Tipe Database: MySQL <br>
+Nama Database: aifloorplan <br>
+Port: 3306 <br>
 
 ## NOTES ##
 * Pastikan MySQL di xampp aktif ketika menjalankan aplikasi

@@ -16,11 +16,11 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity
-@Table(name = "blueprint")
-public class Blueprint {
+@Table(name = "floorplan")
+public class Floorplan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBlueprint;
+    private int idFloorplan;
 
     @Lob
     @Column(nullable = false)

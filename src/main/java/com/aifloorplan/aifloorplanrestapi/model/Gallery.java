@@ -38,7 +38,7 @@ public class Gallery {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "blueprints_idBlueprint", nullable = false)
-    private Blueprint blueprints;
+    @JoinColumn(name = "floorplan_idFloorplan", nullable = false)
+    private Floorplan floorplan;
 
 }

@@ -28,7 +28,7 @@ public class FloorplanService {
 
   public List<FloorplanResponse> getGalleryFloorplans(int id) {
     Iterable<Gallery> galleryList = galleryRepository
-        .findAllByUserIdUserAndIsDeletedFalseAndIsPermanentDeletedFalse(id);
+        .findAllByUserIdUserAndIsDeletedFalseAndIsPermanentDeletedFalseOrderByCreateTimeDesc(id);
     List<FloorplanResponse> floorplans = new ArrayList<>();
 
     for (Gallery gallery : galleryList) {
@@ -45,7 +45,7 @@ public class FloorplanService {
 
   public List<FloorplanResponse> getTrashBinFloorplans(int id) {
     Iterable<Gallery> galleryList = galleryRepository
-        .findAllByUserIdUserAndIsDeletedTrueAndIsPermanentDeletedFalse(id);
+        .findAllByUserIdUserAndIsDeletedTrueAndIsPermanentDeletedFalseOrderByUpdateTimeAsc(id);
     List<FloorplanResponse> floorplans = new ArrayList<>();
 
     for (Gallery gallery : galleryList) {
@@ -67,29 +67,36 @@ public class FloorplanService {
     galleryRepository.save(gallery);
   }
 
-  public void removeFloorplan(int id) {
-    Gallery gallery = galleryRepository.findByFloorplanIdFloorplanAndIsDeletedFalseAndIsPermanentDeletedFalse(id)
-        .orElseThrow();
-    gallery.setDeleted(true);
-    galleryRepository.save(gallery);
+  public void removeFloorplan(List<Integer> floorplanIds) {
+    Iterable<Gallery> galleries = galleryRepository
+        .findByFloorplanIdFloorplanInAndIsDeletedFalseAndIsPermanentDeletedFalse(floorplanIds);
+    for (Gallery gallery : galleries) {
+      gallery.setDeleted(true);
+    }
+    galleryRepository.saveAll(galleries);
   }
 
-  public void restoreFloorplan(int id) {
-    Gallery gallery = galleryRepository.findByFloorplanIdFloorplanAndIsDeletedTrueAndIsPermanentDeletedFalse(id)
-        .orElseThrow();
-    gallery.setDeleted(false);
-    galleryRepository.save(gallery);
+  public void restoreFloorplan(List<Integer> floorplanIds) {
+    Iterable<Gallery> galleries = galleryRepository
+        .findByFloorplanIdFloorplanInAndIsDeletedTrueAndIsPermanentDeletedFalse(floorplanIds);
+    for (Gallery gallery : galleries) {
+      gallery.setDeleted(false);
+    }
+    galleryRepository.saveAll(galleries);
   }
 
-  public void deleteFloorplan(int id) {
-    Gallery gallery = galleryRepository.findByFloorplanIdFloorplanAndIsDeletedTrueAndIsPermanentDeletedFalse(id)
-        .orElseThrow();
-    gallery.setPermanentDeleted(true);
-    galleryRepository.save(gallery);
+  public void deleteFloorplan(List<Integer> floorplanIds) {
+    Iterable<Gallery> galleries = galleryRepository
+        .findByFloorplanIdFloorplanInAndIsDeletedTrueAndIsPermanentDeletedFalse(floorplanIds);
+    for (Gallery gallery : galleries) {
+      gallery.setPermanentDeleted(true);
+    }
+    galleryRepository.saveAll(galleries);
   }
 
   public void deleteAllFloorplan(int id) {
-    Iterable<Gallery> galleries = galleryRepository.findAllByUserIdUserAndIsDeletedTrueAndIsPermanentDeletedFalse(id);
+    Iterable<Gallery> galleries = galleryRepository
+        .findAllByUserIdUserAndIsDeletedTrueAndIsPermanentDeletedFalseOrderByUpdateTimeAsc(id);
     for (Gallery gallery : galleries) {
       gallery.setPermanentDeleted(true);
     }

@@ -193,7 +193,7 @@ public class UserController {
     }
   }
 
-  @GetMapping("/{userId}/trash")
+  @GetMapping("/{userId}/trashbin")
   public ResponseEntity<Object> getUserTrash(@PathVariable(value = "userId") int userId) {
     ServerResponse response = new ServerResponse();
 
@@ -221,7 +221,7 @@ public class UserController {
     }
   }
 
-  @DeleteMapping("/{userId}/trash")
+  @DeleteMapping("/{userId}/trashbin")
   public ResponseEntity<Object> deleteAllUserTrash(@PathVariable(value = "userId") int userId) {
     ServerResponse response = new ServerResponse();
 

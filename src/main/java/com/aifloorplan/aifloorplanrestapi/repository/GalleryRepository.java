@@ -15,7 +15,13 @@ public interface GalleryRepository extends CrudRepository<Gallery, Integer> {
 
   public Optional<Gallery> findByFloorplanIdFloorplanAndIsDeletedTrueAndIsPermanentDeletedFalse(int id);
 
-  public Iterable<Gallery> findAllByUserIdUserAndIsDeletedFalseAndIsPermanentDeletedFalse(int id);
+  public Iterable<Gallery> findByFloorplanIdFloorplanInAndIsDeletedFalseAndIsPermanentDeletedFalse(
+      Iterable<Integer> ids);
 
-  public Iterable<Gallery> findAllByUserIdUserAndIsDeletedTrueAndIsPermanentDeletedFalse(int id);
+  public Iterable<Gallery> findByFloorplanIdFloorplanInAndIsDeletedTrueAndIsPermanentDeletedFalse(
+      Iterable<Integer> ids);
+
+  public Iterable<Gallery> findAllByUserIdUserAndIsDeletedFalseAndIsPermanentDeletedFalseOrderByCreateTimeDesc(int id);
+
+  public Iterable<Gallery> findAllByUserIdUserAndIsDeletedTrueAndIsPermanentDeletedFalseOrderByUpdateTimeAsc(int id);
 }

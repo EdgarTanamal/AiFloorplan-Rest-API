@@ -1,6 +1,7 @@
 package com.aifloorplan.aifloorplanrestapi.controller;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aifloorplan.aifloorplanrestapi.dto.FloorplanRequest;
@@ -89,25 +90,27 @@ public class FloorplanController {
     }
   }
 
-  @DeleteMapping("/gallery/{floorplanId}")
-  public ResponseEntity<Object> moveToTrashBin(@PathVariable(value = "floorplanId") int floorplanId) {
+  @DeleteMapping("/gallery")
+  public ResponseEntity<Object> moveToTrashBin(@RequestParam(value = "floorplanIds") List<Integer> floorplanIds) {
     ServerResponse response = new ServerResponse();
 
     try {
-      Optional<Gallery> gallery = floorplanService.getGalleryFloorplan(floorplanId);
-      // Cek ketersediaan data floorplan di database
-      if (!gallery.isPresent()) {
-        response.addMessages("Data floorplan tidak tersedia atau tidak ditemukan");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      for (Integer floorplanId : floorplanIds) {
+        Optional<Gallery> gallery = floorplanService.getGalleryFloorplan(floorplanId);
+        // Cek ketersediaan data floorplan di database
+        if (!gallery.isPresent()) {
+          response.addMessages("Data floorplan dengan ID " + floorplanId + " tidak tersedia atau tidak ditemukan");
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        // Cek kesesuaian id user yang diminta dengan id user yang sedang terautentikasi
+        if (!authenticationService.isRequestedIdAuthenticated(gallery.get().getUser().getIdUser())) {
+          response.addMessages("Hak izin dibutuhkan untuk mengakses endpoint");
+          return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
       }
 
-      // Cek kesesuaian id user yang diminta dengan id user yang sedang terautentikasi
-      if (!authenticationService.isRequestedIdAuthenticated(gallery.get().getUser().getIdUser())) {
-        response.addMessages("Hak izin dibutuhkan untuk mengakses endpoint");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-      }
-
-      floorplanService.removeFloorplan(floorplanId);
+      floorplanService.removeFloorplan(floorplanIds);
 
       response.setSuccess(true);
       response.addMessages("Data floorplan berhasil dipindahkan ke trash bin");
@@ -119,25 +122,27 @@ public class FloorplanController {
     }
   }
 
-  @PutMapping("/trash/{floorplanId}")
-  public ResponseEntity<Object> restoreToGallery(@PathVariable(value = "floorplanId") int floorplanId) {
+  @PutMapping("/trashbin")
+  public ResponseEntity<Object> restoreToGallery(@RequestParam(value = "floorplanIds") List<Integer> floorplanIds) {
     ServerResponse response = new ServerResponse();
 
     try {
-      Optional<Gallery> gallery = floorplanService.getTrashBinFloorplan(floorplanId);
-      // Cek ketersediaan data floorplan di database
-      if (!gallery.isPresent()) {
-        response.addMessages("Data floorplan tidak tersedia atau tidak ditemukan");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      for (Integer floorplanId : floorplanIds) {
+        Optional<Gallery> gallery = floorplanService.getTrashBinFloorplan(floorplanId);
+        // Cek ketersediaan data floorplan di database
+        if (!gallery.isPresent()) {
+          response.addMessages("Data floorplan dengan ID " + floorplanId + " tidak tersedia atau tidak ditemukan");
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        // Cek kesesuaian id user yang diminta dengan id user yang sedang terautentikasi
+        if (!authenticationService.isRequestedIdAuthenticated(gallery.get().getUser().getIdUser())) {
+          response.addMessages("Hak izin dibutuhkan untuk mengakses endpoint");
+          return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
       }
 
-      // Cek kesesuaian id user yang diminta dengan id user yang sedang terautentikasi
-      if (!authenticationService.isRequestedIdAuthenticated(gallery.get().getUser().getIdUser())) {
-        response.addMessages("Hak izin dibutuhkan untuk mengakses endpoint");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-      }
-
-      floorplanService.restoreFloorplan(floorplanId);
+      floorplanService.restoreFloorplan(floorplanIds);
 
       response.setSuccess(true);
       response.addMessages("Data floorplan berhasil dipulihkan");
@@ -149,25 +154,27 @@ public class FloorplanController {
     }
   }
 
-  @DeleteMapping("/trash/{floorplanId}")
-  public ResponseEntity<Object> deleteFromTrashBin(@PathVariable(value = "floorplanId") int floorplanId) {
+  @DeleteMapping("/trashbin")
+  public ResponseEntity<Object> deleteFromTrashBin(@RequestParam(value = "floorplanIds") List<Integer> floorplanIds) {
     ServerResponse response = new ServerResponse();
 
     try {
-      Optional<Gallery> gallery = floorplanService.getTrashBinFloorplan(floorplanId);
-      // Cek ketersediaan data floorplan di database
-      if (!gallery.isPresent()) {
-        response.addMessages("Data floorplan tidak tersedia atau tidak ditemukan");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+      for (Integer floorplanId : floorplanIds) {
+        Optional<Gallery> gallery = floorplanService.getTrashBinFloorplan(floorplanId);
+        // Cek ketersediaan data floorplan di database
+        if (!gallery.isPresent()) {
+          response.addMessages("Data floorplan dengan ID " + floorplanId + " tidak tersedia atau tidak ditemukan");
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        // Cek kesesuaian id user yang diminta dengan id user yang sedang terautentikasi
+        if (!authenticationService.isRequestedIdAuthenticated(gallery.get().getUser().getIdUser())) {
+          response.addMessages("Hak izin dibutuhkan untuk mengakses endpoint");
+          return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
       }
 
-      // Cek kesesuaian id user yang diminta dengan id user yang sedang terautentikasi
-      if (!authenticationService.isRequestedIdAuthenticated(gallery.get().getUser().getIdUser())) {
-        response.addMessages("Hak izin dibutuhkan untuk mengakses endpoint");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-      }
-
-      floorplanService.deleteFloorplan(floorplanId);
+      floorplanService.deleteFloorplan(floorplanIds);
 
       response.setSuccess(true);
       response.addMessages("Data floorplan berhasil dihapus dari trash bin");

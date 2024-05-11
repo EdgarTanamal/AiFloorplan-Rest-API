@@ -1,5 +1,6 @@
 package com.aifloorplan.aifloorplanrestapi.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +73,7 @@ public class FloorplanService {
         .findByFloorplanIdFloorplanInAndIsDeletedFalseAndIsPermanentDeletedFalse(floorplanIds);
     for (Gallery gallery : galleries) {
       gallery.setDeleted(true);
+      gallery.setUpdateTime(new Timestamp(System.currentTimeMillis()));
     }
     galleryRepository.saveAll(galleries);
   }
@@ -81,6 +83,7 @@ public class FloorplanService {
         .findByFloorplanIdFloorplanInAndIsDeletedTrueAndIsPermanentDeletedFalse(floorplanIds);
     for (Gallery gallery : galleries) {
       gallery.setDeleted(false);
+      gallery.setUpdateTime(new Timestamp(System.currentTimeMillis()));
     }
     galleryRepository.saveAll(galleries);
   }
@@ -90,6 +93,7 @@ public class FloorplanService {
         .findByFloorplanIdFloorplanInAndIsDeletedTrueAndIsPermanentDeletedFalse(floorplanIds);
     for (Gallery gallery : galleries) {
       gallery.setPermanentDeleted(true);
+      gallery.setUpdateTime(new Timestamp(System.currentTimeMillis()));
     }
     galleryRepository.saveAll(galleries);
   }
@@ -99,6 +103,7 @@ public class FloorplanService {
         .findAllByUserIdUserAndIsDeletedTrueAndIsPermanentDeletedFalseOrderByUpdateTimeAsc(id);
     for (Gallery gallery : galleries) {
       gallery.setPermanentDeleted(true);
+      gallery.setUpdateTime(new Timestamp(System.currentTimeMillis()));
     }
     galleryRepository.saveAll(galleries);
   }

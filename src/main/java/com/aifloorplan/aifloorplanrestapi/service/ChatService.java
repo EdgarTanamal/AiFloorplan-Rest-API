@@ -102,6 +102,7 @@ public class ChatService {
       ChatgroupResponse response = new ChatgroupResponse();
       response.setChatgroupId(chatgroup.getIdChatgroup());
       response.setChat(chat.getChat());
+      response.setCreateTime(chat.getCreateTime());
 
       responseList.add(response);
     }

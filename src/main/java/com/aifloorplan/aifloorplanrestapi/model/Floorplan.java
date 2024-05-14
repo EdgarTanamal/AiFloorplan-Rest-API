@@ -23,7 +23,7 @@ public class Floorplan {
     private int idFloorplan;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2097152) // 2 MB
     private byte[] imageData;
 
     @Column(nullable = false)

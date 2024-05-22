@@ -21,8 +21,11 @@ public class LimeWireApiService {
   public List<FloorplanResponse> generateFloorplans(String prompt) throws Exception {
     var httpClient = HttpClient.newBuilder().build();
 
-    var payload = String.join("\n", "{", " \"prompt\": \"" + prompt + "\",", " \"aspect_ratio\": \"1:1\",",
-        " \"samples\": 2", "}");
+    var payload = new JSONObject()
+        .put("prompt", prompt)
+        .put("aspect_ratio", "1:1")
+        .put("samples", 2)
+        .toString();
 
     var pathname = "/api/image/generation";
     var request = HttpRequest.newBuilder()
@@ -35,6 +38,10 @@ public class LimeWireApiService {
         .build();
 
     var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+    if (response.statusCode() != 200) {
+      throw new RuntimeException("Failed to get a valid response: " + response.body());
+    }
 
     List<FloorplanResponse> floorplanList = new ArrayList<>();
 
@@ -59,15 +66,6 @@ public class LimeWireApiService {
 
       floorplanList.add(floorplan);
     }
-
-    // String link =
-    // "https://ai-studio-assets.limewire.media/u/350d7653-8b6f-4f5d-b5a8-ba229ddd3eaa/image/52695019-b063-4fca-9b65-7b1c213a3338?Expires=1715650178&Signature=WMhgfoRsb8PBwn3OsI6hlSXOSDdaksrigAqu8E1kLnGBSLtxSPmqhhjQ06utQhkdzsR4ilqjSuRnUGueLXHOfyU5N8CrVd9w45vm3xm-q2HndNaYu0-kPM-SFKymUuI7FZFthFtSTMwQvhyeZmP2WIYuuESPCAm4Uu7bpDFtwS9RoxfYkRkFgK3-s~uJ5h9mF00rq~~8R2KhkfYUpWQEAvqhHjaoLhzTY5Gz4KIMVs1s3cD0CcH~fMvRycZsLBsv~S0pUrt~JGIC2FM-FZ6vqka4Al5IkguMzwZigH7TtQwDkolpJYG3elTO0v0wqa1vx1V5wbWsrONasIHQERABXQ__&Key-Pair-Id=K1U52DHN9E92VT";
-    // FloorplanResponse floorplan = new FloorplanResponse();
-    // floorplan.setFloorplanId(0);
-    // floorplan.setImageData(Util.downloadImage(link));
-    // floorplan.setPrompt("Floorplan example");
-
-    // floorplanList.add(floorplan);
 
     return floorplanList;
   }

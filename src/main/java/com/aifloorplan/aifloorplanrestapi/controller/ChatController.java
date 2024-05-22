@@ -110,7 +110,7 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
       }
 
-      response.addPayloadField("Chatlist", chatService.getChatList(chatgroupId));
+      response.addPayloadField("chatlist", chatService.getChatList(chatgroupId));
       response.setSuccess(true);
 
       return ResponseEntity.ok().body(response);

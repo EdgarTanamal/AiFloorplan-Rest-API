@@ -12,6 +12,6 @@ public interface ChatgroupRepository extends CrudRepository<Chatgroup, Integer> 
 
   public Optional<Chatgroup> findByIdChatgroupAndIsDeletedFalse(int id);
 
-  public Iterable<Chatgroup> findAllByUserIdUserAndIsDeletedFalse(int id);
+  public Iterable<Chatgroup> findAllByUserIdUserAndIsDeletedFalseOrderByCreateTimeDesc(int id);
 
 }

@@ -82,7 +82,7 @@ public class ChatController {
       ChatResponse chatResponse = chatService.createChat(request);
       response.addPayloadField("chat", chatResponse.getChat());
       response.addPayloadField("floorplans", chatResponse.getFloorplans());
-      response.addPayloadField("userId", request.getUserId());
+      response.addPayloadField("chatgroupId", chatResponse.getChatgroupId());
       response.setSuccess(true);
 
       return ResponseEntity.status(HttpStatus.CREATED).body(response);

@@ -14,6 +14,8 @@ import lombok.Setter;
 public class ChatResponse {
   private String chat;
 
+  private int chatgroupId;
+
   private List<FloorplanResponse> floorplans = new ArrayList<>();
 
   @JsonInclude(JsonInclude.Include.NON_NULL)

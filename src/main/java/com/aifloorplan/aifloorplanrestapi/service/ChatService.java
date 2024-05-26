@@ -46,18 +46,19 @@ public class ChatService {
   private FloorplanRepository floorplanRepository;
 
   public ChatResponse createChat(ChatRequest request) throws Exception {
-    List<FloorplanResponse> floorplans = limeWireApiService.generateFloorplans(request.getChat());
-    // List<FloorplanResponse> floorplans = getFloorplans();
+    // List<FloorplanResponse> floorplans =
+    // limeWireApiService.generateFloorplans(request.getChat());
+
+    List<FloorplanResponse> floorplans = getFloorplans();
+    Chatgroup chatgroup = new Chatgroup();
 
     if (request.getUserId() != 0) {
       User user = userRepository.findByIdUserAndIsDeletedFalse(request.getUserId()).orElseThrow();
-      Chatgroup chatgroup;
       if (request.getChatgroupId() != 0) {
         chatgroup = chatgroupRepository.findByIdChatgroupAndIsDeletedFalse(request.getChatgroupId()).orElseThrow();
       } else {
-        chatgroup = new Chatgroup();
         chatgroup.setUser(user);
-        chatgroupRepository.save(chatgroup);
+        chatgroup = chatgroupRepository.save(chatgroup);
       }
 
       Chat chat = new Chat();
@@ -88,13 +89,15 @@ public class ChatService {
 
     ChatResponse response = new ChatResponse();
     response.setChat(request.getChat());
+    response.setChatgroupId(chatgroup.getIdChatgroup());
     response.setFloorplans(floorplans);
 
     return response;
   }
 
   public List<ChatgroupResponse> getHistory(int id) {
-    Iterable<Chatgroup> chatgroupList = chatgroupRepository.findAllByUserIdUserAndIsDeletedFalse(id);
+    Iterable<Chatgroup> chatgroupList = chatgroupRepository
+        .findAllByUserIdUserAndIsDeletedFalseOrderByCreateTimeDesc(id);
 
     List<ChatgroupResponse> responseList = new ArrayList<>();
 

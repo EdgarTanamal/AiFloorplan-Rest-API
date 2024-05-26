@@ -24,7 +24,7 @@ public class LimeWireApiService {
     var payload = new JSONObject()
         .put("prompt", prompt)
         .put("aspect_ratio", "1:1")
-        .put("samples", 2)
+        .put("samples", 1)
         .toString();
 
     var pathname = "/api/image/generation";

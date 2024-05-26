@@ -46,10 +46,9 @@ public class ChatService {
   private FloorplanRepository floorplanRepository;
 
   public ChatResponse createChat(ChatRequest request) throws Exception {
-    // List<FloorplanResponse> floorplans =
-    // limeWireApiService.generateFloorplans(request.getChat());
+    List<FloorplanResponse> floorplans = limeWireApiService.generateFloorplans(request.getChat());
+    // List<FloorplanResponse> floorplans = getFloorplans();
 
-    List<FloorplanResponse> floorplans = getFloorplans();
     Chatgroup chatgroup = new Chatgroup();
 
     if (request.getUserId() != 0) {

@@ -14,15 +14,18 @@ import com.aifloorplan.aifloorplanrestapi.dto.FloorplanResponse;
 
 public class LimeWireApiService {
   final String host = "https://api.limewire.com";
+
   // final String apiToken =
   // "lmwr_sk_uWNTJrKaQ4_aVb6NbHGhyBCsCMXI7JtKDcYcHrEHeUD7reC2";
   final String apiToken = "lmwr_sk_NwcTplq6vq_9kubEPG7X9p2P4wR8Tt1ko4UykraH4OyfxJ6G";
+
+  final String leadingPrompt = "2D Floorplan Blueprint of House, Show Size of Each Room with Ruler Number, Draw It In Style of Kelly Wearstler, The Blueprint Must Include: ";
 
   public List<FloorplanResponse> generateFloorplans(String prompt) throws Exception {
     var httpClient = HttpClient.newBuilder().build();
 
     var payload = new JSONObject()
-        .put("prompt", prompt)
+        .put("prompt", leadingPrompt + prompt)
         .put("aspect_ratio", "1:1")
         .put("samples", 1)
         .toString();

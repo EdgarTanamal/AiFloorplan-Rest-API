@@ -12,6 +12,8 @@ public class UserRequest {
   @Size(max = 50, message = "Password must be at most 50 characters")
   private String password;
 
+  private String oldPassword;
+
   private boolean isPremium;
 
 }

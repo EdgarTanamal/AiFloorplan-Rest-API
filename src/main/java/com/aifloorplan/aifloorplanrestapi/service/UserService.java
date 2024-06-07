@@ -29,6 +29,14 @@ public class UserService {
     User user = userRepository.findByIdUserAndIsDeletedFalse(id).orElseThrow();
 
     if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+      if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+        throw new NullPointerException("Kata sandi lama tidak valid");
+      }
+
+      if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        throw new RuntimeException("Kata sandi baru tidak boleh sama dengan kata sandi lama");
+      }
+
       user.setPassword(passwordEncoder.encode(request.getPassword()));
     }
 

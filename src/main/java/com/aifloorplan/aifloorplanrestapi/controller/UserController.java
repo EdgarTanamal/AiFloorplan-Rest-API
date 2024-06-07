@@ -71,6 +71,7 @@ public class UserController {
   @PutMapping("/{userId}")
   public ResponseEntity<Object> updateUserData(@PathVariable(value = "userId") int userId,
       @Valid @RequestBody UserRequest request, Errors errors) {
+    ;
     ServerResponse response = new ServerResponse();
 
     try {
@@ -79,6 +80,13 @@ public class UserController {
         for (ObjectError error : errors.getAllErrors()) {
           response.addMessages(error.getDefaultMessage());
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+      }
+
+      // Cek apakah password baru dan lama tersedia
+      if ((request.getPassword() != null && !request.getPassword().isEmpty())
+          && (request.getOldPassword() == null || request.getOldPassword().isEmpty())) {
+        response.addMessages("Kata sandi lama dibutuhkan untuk memperbarui kata sandi");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
       }
 
@@ -101,6 +109,12 @@ public class UserController {
 
       return ResponseEntity.ok().body(response);
 
+    } catch (NullPointerException e) {
+      response.addMessages(e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    } catch (RuntimeException e) {
+      response.addMessages(e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     } catch (Exception e) {
       response.addMessages("Terjadi kesalahan pada server");
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

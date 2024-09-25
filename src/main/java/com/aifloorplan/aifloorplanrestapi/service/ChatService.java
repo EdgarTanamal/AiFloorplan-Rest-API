@@ -16,6 +16,7 @@ import com.aifloorplan.aifloorplanrestapi.model.Floorplan;
 import com.aifloorplan.aifloorplanrestapi.model.Chat;
 import com.aifloorplan.aifloorplanrestapi.model.Chatgroup;
 import com.aifloorplan.aifloorplanrestapi.model.User;
+import com.aifloorplan.aifloorplanrestapi.other.LeonardoApiService;
 import com.aifloorplan.aifloorplanrestapi.other.LimeWireApiService;
 import com.aifloorplan.aifloorplanrestapi.repository.FloorplanRepository;
 import com.aifloorplan.aifloorplanrestapi.repository.ChatRepository;
@@ -24,7 +25,9 @@ import com.aifloorplan.aifloorplanrestapi.repository.UserRepository;
 
 @Service
 public class ChatService {
-  private final LimeWireApiService limeWireApiService = new LimeWireApiService();
+  private final LeonardoApiService leonardoApiService = new LeonardoApiService();
+  // private final LimeWireApiService limeWireApiService = new
+  // LimeWireApiService();
 
   private FloorplanResponse floorplan1 = new FloorplanResponse(0, new byte[] { 0x48, 0x65, 0x6C, 0x6C, 0x6F }, "Hello",
       new Timestamp(System.currentTimeMillis()));
@@ -46,7 +49,9 @@ public class ChatService {
   private FloorplanRepository floorplanRepository;
 
   public ChatResponse createChat(ChatRequest request) throws Exception {
-    List<FloorplanResponse> floorplans = limeWireApiService.generateFloorplans(request.getChat());
+    List<FloorplanResponse> floorplans = leonardoApiService.generateFloorplans(request.getChat());
+    // List<FloorplanResponse> floorplans =
+    // limeWireApiService.generateFloorplans(request.getChat());
     // List<FloorplanResponse> floorplans = getFloorplans();
 
     Chatgroup chatgroup = new Chatgroup();
@@ -155,6 +160,7 @@ public class ChatService {
     return chatgroupRepository.existsByIdChatgroupAndIsDeletedFalse(id);
   }
 
+  // For testing purposes only
   private List<FloorplanResponse> getFloorplans() {
     List<FloorplanResponse> floorplans = new ArrayList<>();
     floorplans.add(floorplan1);
